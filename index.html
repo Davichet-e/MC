@@ -1,0 +1,90 @@
+<!-- This layout assumes:
+
+ - the existence of a main.js script file in the same directory as the file using the layout
+ - the existence of a main.css CSS file in the same directory as the file using the layout
+
+ -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Bunimovich Stadium</title>
+    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap.css" />
+    <link rel="stylesheet" href="https://cscheid.net/css/style.css" />
+    <link rel="stylesheet" href="https://cscheid.net/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.typekit.net/pbc8pbg.css"
+      type="text/css"
+    />
+    <script
+      type="text/javascript"
+      src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cscheid.net/js/bootstrap.js"
+    ></script>
+
+    <script
+      type="text/javascript"
+      src="https://cscheid.net/js/d3.v5.min.js"
+    ></script>
+
+    <script src="https://cscheid.net/js/footer.js"></script>
+    <script src="https://cscheid.net/js/mobile-detect.js"></script>
+    <script src="https://cscheid.net/js/iphone-hack.js"></script>
+
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-1"></div>
+      <div class="col-md-10">
+        <h2 id="bunimovich-stadium">Bunimovich Stadium</h2>
+
+        <p>
+          The Bunimovich Stadium is one example of a
+          <a href="https://en.wikipedia.org/wiki/Dynamical_billiards"
+            >Dynamical Billiards</a
+          >
+          table that exhibits chaotic behavior even with only concave
+          scatterings. Trajectories in the Bunimovich stadium exhibit (eventual)
+          exponential divergence over time. In addition,
+          <a href="https://en.wikipedia.org/wiki/Almost_surely">almost any</a>
+          trajectory in a Bunimovich stadium will eventually touch cover any
+          point of the stadium. This is in sharp contrast to trajectories in
+          elliptical billiards: any one trajectory in elliptical billiards will
+          always leave a chunk of the table unexplored.
+        </p>
+
+        <div id="main" style="margin-left: 60px"></div>
+
+        <div id="reset"></div>
+        <div id="clear-tracks"></div>
+
+        <h2 id="acknowledgments">Acknowledgments</h2>
+
+        <p>
+          Inspiration for this post came from
+          <a
+            href="http://blogs.ams.org/visualinsight/2016/11/15/bunimovich-stadium/"
+            >Baez’s post on the stadium</a
+          >.
+        </p>
+      </div>
+    </div>
+    <hr />
+    <div class="container"></div>
+    <script src="https://cscheid.net/js/mobile-detect.js"></script>
+    <script src="https://cscheid.net/js/iphone-hack.js"></script>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
