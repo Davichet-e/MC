@@ -9,82 +9,87 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Bunimovich Stadium</title>
-    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap-theme.css" />
-    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap.css" />
-    <link rel="stylesheet" href="https://cscheid.net/css/bootstrap.css" />
-    <link rel="stylesheet" href="https://cscheid.net/css/style.css" />
-    <link rel="stylesheet" href="https://cscheid.net/main.css" />
+
+    <link rel="stylesheet" href="main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Roboto:wght@300&display=swap"
       rel="stylesheet"
-      href="https://use.typekit.net/pbc8pbg.css"
-      type="text/css"
     />
     <script
+      defer
       type="text/javascript"
-      src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"
     ></script>
     <script
+      defer
       type="text/javascript"
-      src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"
+      src="https:////cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"
     ></script>
     <script
+      defer
       type="text/javascript"
-      src="https://cscheid.net/js/bootstrap.js"
+      src="https://unpkg.com/d3@7.2.1/dist/d3.min.js"
     ></script>
 
-    <script
-      type="text/javascript"
-      src="https://cscheid.net/js/d3.v5.min.js"
-    ></script>
-
-    <script src="https://cscheid.net/js/footer.js"></script>
-    <script src="https://cscheid.net/js/mobile-detect.js"></script>
-    <script src="https://cscheid.net/js/iphone-hack.js"></script>
-
-    <script type="module" src="./main.js"></script>
+    <script defer src="./main.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="col-md-1"></div>
-      <div class="col-md-10">
-        <h2 id="bunimovich-stadium">Bunimovich Stadium</h2>
+    <main class="container">
+      <h1 id="titulo">Estadio de Bunimóvich</h1>
 
-        <p>
-          The Bunimovich Stadium is one example of a
-          <a href="https://en.wikipedia.org/wiki/Dynamical_billiards"
-            >Dynamical Billiards</a
-          >
-          table that exhibits chaotic behavior even with only concave
-          scatterings. Trajectories in the Bunimovich stadium exhibit (eventual)
-          exponential divergence over time. In addition,
-          <a href="https://en.wikipedia.org/wiki/Almost_surely">almost any</a>
-          trajectory in a Bunimovich stadium will eventually touch cover any
-          point of the stadium. This is in sharp contrast to trajectories in
-          elliptical billiards: any one trajectory in elliptical billiards will
-          always leave a chunk of the table unexplored.
+      <p>
+        En este trabajo, vamos a presentar una visualización del conocido como
+        <i>Estadio de Bunimóvich</i>. En el cual, intentaremos demostrar
+        mediante visualizaciones hechas en JS haciendo uso de librerías
+        externas, como <a href="https://github.com/d3/d3">D3.js</a>,
+        <a href="https://github.com/cscheid/cscheid.net">cscheid</a>, o
+        <a href="https://github.com/jquery/jquery">jquery</a>, las propiedades
+        caóticas del mismo.
+      </p>
+      <p>
+        También queremos destacar el paper que citamos a continuación como
+        bibliografía:
+        <cite
+          >Shoemaker, Randal, "Modeling a chaotic billiard: The Bunimovich
+          Stadium" (2019). Senior Honors Projects, 2010-2019. 715.
+        </cite>
+      </p>
+      <p>
+        Consideramos oportuno una rápida mención a la geometría del
+        <i>Estadio de Bunimóvich</i>, la cual es simplemente un rectángulo con
+        dos semicirculos en direcciones opuestas.
+      </p>
+
+      <p>
+        Para demostrar que un sistema es caótico, es necesario demostrar 3 propiedades:
+        <ul>
+          <li>Sensibilidad a condiciones iniciales</li>
+          <li>Periodícidad</li>
+          <li>Transitividad topológica</li>
+        </ul>
+      </p>
+
+      <p>Procedamos a visualizarlas una a una.</p>
+
+      <section>
+        <h3>Sensibilidad a condiciones iniciales.</h3>
+        <p>Para ello, vamos a lanzar 2 bolas con (casi) la misma dirección aleatoria y velocidad, variando la dirección en un 0.001%.
+          Una de las bolas será verde, y dejará un rastro negro, y la otra blanca, dejando un rastro blanco.
         </p>
 
-        <div id="main" style="margin-left: 60px"></div>
+        <p>Al principio del experimento, se ve solo una bola y un recorrido, debido a que la segunda está superpuesta con la primera,
+          pero a lo largo de las iteraciones, se va viendo cómo se van alejando.</p>
+        
 
-        <div id="reset"></div>
-        <div id="clear-tracks"></div>
 
-        <h2 id="acknowledgments">Acknowledgments</h2>
 
-        <p>
-          Inspiration for this post came from
-          <a
-            href="http://blogs.ams.org/visualinsight/2016/11/15/bunimovich-stadium/"
-            >Baez’s post on the stadium</a
-          >.
-        </p>
-      </div>
-    </div>
-    <hr />
-    <div class="container"></div>
-    <script src="https://cscheid.net/js/mobile-detect.js"></script>
-    <script src="https://cscheid.net/js/iphone-hack.js"></script>
+      <div class="contenedor-billar"></div>
 
-    <script type="module" src="main.js"></script>
+      <button id="reinicio">Reinicia Experimento</button>
+
+    </section>
+    </main>
   </body>
 </html>

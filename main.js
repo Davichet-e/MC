@@ -222,7 +222,7 @@ class Transform {
   }
 }
 
-function lineLineIntersect(p1, p2, p3, p4) {
+function interseccionLineas(p1, p2, p3, p4) {
   function det2(a, b, c, d) {
     return a * d - b * c;
   }
@@ -236,15 +236,15 @@ function lineLineIntersect(p1, p2, p3, p4) {
   return new Vec2(det2(t1, x12, t2, x34) / t3, det2(t1, y12, t2, y34) / t3);
 }
 
-function makeBall(origin, velocity, originT) {
+function hazBola(origin, velocity, originT) {
   return {
-    originT: originT || 0,
-    origin: origin,
-    velocity: velocity,
+    originT: originT ?? 0,
+    origin,
+    velocity,
   };
 }
 
-function shapeBounce(shape, ball) {
+function botaBola(shape, ball) {
   const intersection = shape.intersect(ball);
   if (
     intersection.t === Infinity ||
@@ -256,14 +256,14 @@ function shapeBounce(shape, ball) {
   const normal = shape.normalAt(intersection.point);
   if (normal.dot(ball.velocity.unit()) >= 0) return undefined;
 
-  return makeBall(
+  return hazBola(
     intersection.point,
     ball.velocity.reflect(normal).neg(),
     intersection.t
   );
 }
 
-function halfPlane(point, normal) {
+function medioPlano(point, normal) {
   normal = normal.unit();
   const tangent = new Vec2(normal.y, -normal.x);
   const p1 = point.plus(tangent),
@@ -271,7 +271,7 @@ function halfPlane(point, normal) {
 
   return {
     intersect(ball) {
-      const result = lineLineIntersect(
+      const result = interseccionLineas(
         p1,
         p2,
         ball.origin,
@@ -294,14 +294,14 @@ function halfPlane(point, normal) {
   };
 }
 
-function halfInnerCircle(center, radius, normal) {
+function medioCirculo(center, radius, normal) {
   const ellipse = new Ellipse()
     .transform(Transform.scale(radius, radius))
     .transform(Transform.translate(center.x, center.y));
 
   normal = normal.unit();
   return {
-    intersect: function (ball) {
+    intersect(ball) {
       const is = ellipse.lineIntersection(
         ball.origin,
         ball.origin.plus(ball.velocity)
@@ -334,53 +334,49 @@ function halfInnerCircle(center, radius, normal) {
         point: result,
       };
     },
-    normalAt: function (point) {
+    normalAt(point) {
       return ellipse.gradient.apply(point).unit().neg();
     },
   };
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
-function decideNextBounce(ball, scene) {
-  const bounces = [];
-  scene.forEach(function (object) {
-    const intersect = object.intersect(ball);
-    if (intersect === undefined) return;
-    if (intersect.t === Infinity) return;
-    const bounce = shapeBounce(object, ball);
-    if (bounce !== undefined) {
-      bounces.push(bounce);
+function decideSiguienteBote(ball, escena) {
+  const botes = [];
+  escena.forEach((object) => {
+    const interseccion = object.intersect(ball);
+    if (interseccion === undefined) return;
+    if (interseccion.t === Infinity) return;
+    const bote = botaBola(object, ball);
+    if (bote !== undefined) {
+      botes.push(bote);
     }
   });
-  bounces.sort(function (b1, b2) {
-    if (b1.originT < b2.originT) return -1;
-    else if (b1.originT > b2.originT) return 1;
+  botes.sort((bote1, bote2) => {
+    if (bote1.originT < bote2.originT) return -1;
+    else if (bote1.originT > bote2.originT) return 1;
     else return 0;
   });
-  if (bounces.length === 0) {
-    throw new Error("ball escaped?");
+  if (botes.length === 0) {
+    console.error("Bug");
   }
-  return bounces[0];
+  return botes[0];
 }
 
-//////////////////////////////////////////////////////////////////////////////
-
 const svg = d3
-  .select("#main")
+  .select(".contenedor-billar")
   .append("svg")
   .style("position", "absolute")
   .attr("width", 800)
   .attr("height", 400);
 
-const bunimovichScene = [
-  halfPlane(new Vec2(0, 200), new Vec2(0, -1)),
-  halfPlane(new Vec2(0, -200), new Vec2(0, 1)),
-  halfInnerCircle(new Vec2(-200, 0), 200, new Vec2(1, 0)),
-  halfInnerCircle(new Vec2(200, 0), 200, new Vec2(-1, 0)),
+const escena = [
+  medioPlano(new Vec2(0, 200), new Vec2(0, -1)),
+  medioPlano(new Vec2(0, -200), new Vec2(0, 1)),
+  medioCirculo(new Vec2(-200, 0), 200, new Vec2(1, 0)),
+  medioCirculo(new Vec2(200, 0), 200, new Vec2(-1, 0)),
 ];
 
-function addBunimovichBG(sel) {
+function añadeFondoBunimovich(sel) {
   sel
     .attr("transform", "translate(400, 200)")
     .append("path")
@@ -388,15 +384,15 @@ function addBunimovichBG(sel) {
       "d",
       "M -200 -200 l 400 0 a 200 200 0 0 1 0 400 l -400 0 a 200 200 0 0 1 0 -400 "
     )
-    .attr("fill", d3.lab(80, 0, 0));
+    .attr("fill", d3.lab(100, 400, 0));
 }
 
 const stadiumBg = svg.append("g");
 
-d3.select("#main").style("position", "relative");
+d3.select(".contenedor-billar").style("position", "relative");
 
-const stadiumTrace = d3
-  .select("#main")
+const canvas = d3
+  .select(".contenedor-billar")
   .append("canvas")
   .style("position", "absolute")
   .attr("width", 800)
@@ -404,96 +400,67 @@ const stadiumTrace = d3
   .style("opacity", 0.7)
   .node();
 
-d3.select("#main")
+d3.select(".contenedor-billar")
   .append("div")
   .style("position", "relative")
   .style("height", "420px")
   .style("width", "800px");
 
-const ctx = stadiumTrace.getContext("2d");
+const ctx = canvas.getContext("2d");
 
 // Esto indica de donde nacen las bolas
 const svgScene = svg.append("g").attr("transform", "translate(400, 200)");
 
-let balls = [];
+let bolas = [];
 
-function addBalls(n, center, direction, spread, speed) {
-  const angleScale = d3.scaleLinear().domain([0, n]).range([-spread, spread]);
+function añadeBolas(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
   for (let i = 0; i < n; ++i) {
     const rot = Transform.rotate(angleScale(i + (0.5 * Math.random() - 0.25)));
-    balls.push({
-      current: makeBall(center, rot.apply(direction).scale(speed)),
+    bolas.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
     });
   }
 }
 
-const ballPen = svgScene.append("g");
+const canvasBola = svgScene.append("g");
 
-const [selector, scene, backgroundFunction] = [
-  "#reset",
-  bunimovichScene,
-  addBunimovichBG,
-];
+document.getElementById("reinicio").addEventListener("click", () => {
+  demuestraSensibilidad(escena, añadeFondoBunimovich);
+});
 
-d3.select(selector)
-  .append("span")
-  .style("min-width", "200px")
-  .style("display", "inline-block")
-  .text("Scene: " + selector.substring(7));
-
-d3.select(selector)
-  .append("button")
-  .text("300 balls")
-  .on("click", function () {
-    reset(300, scene, backgroundFunction);
-  });
-
-d3.select(selector).append("span").text(" ");
-
-d3.select(selector)
-  .append("button")
-  .text("1 ball")
-  .on("click", function () {
-    reset(1, scene, backgroundFunction);
-  });
-
-d3.select("#clear-tracks")
-  .append("button")
-  .text("clear tracks")
-  .on("click", function () {
-    ctx.clearRect(0, 0, 800, 400);
-  });
-
-let batch = 0;
-const speed = 500;
-function reset(howMany, scene, backgroundFunction) {
-  ++batch;
-  balls = [];
+let iteracion = 0;
+const velocidad = 5;
+function demuestraSensibilidad(escena, backgroundFunction) {
+  ++iteracion;
+  bolas = [];
   ctx.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
 
   backgroundFunction(stadiumBg);
 
-  const randomAngle = Math.random() * 2 * Math.PI;
-
-  addBalls(
-    howMany,
+  añadeBolas(
+    2,
     new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
-    new Vec2(Math.cos(randomAngle), Math.sin(randomAngle)),
-    Math.random() * 0.25,
-    speed
+    new Vec2(80, 80),
+    0.00001,
+    velocidad
   );
 
-  const all = ballPen.selectAll("*");
-  all.transition();
-  all.remove();
+  const todasLasBolas = canvasBola.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
 
-  ballPen
+  const bolasVerdes = canvasBola
     .selectAll("*")
-    .data(balls)
+    .data(bolas)
     .enter()
     .append("circle")
-    .each(function (ball) {
-      ball.next = decideNextBounce(ball.current, scene);
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
     })
     .attr("cx", function (ball) {
       return ball.current.origin.x;
@@ -501,38 +468,47 @@ function reset(howMany, scene, backgroundFunction) {
     .attr("cy", function (ball) {
       return ball.current.origin.y;
     })
-    .attr("r", 2)
-    .attr("fill", "peru")
-    .call(transitionToNext(batch, scene));
+    .attr("r", 5)
+    .attr("fill", "green");
+  bolasVerdes.call(siguienteTransicion(iteracion, escena, false));
+
+  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
+  bolasAzules.call(siguienteTransicion(iteracion, escena, true));
 }
 
-reset(300, bunimovichScene, addBunimovichBG);
-
-function transitionToNext(whichBatch, scene) {
+function siguienteTransicion(nDeIteracion, escena, pintaBolaBlanca) {
   return function (sel) {
     sel
       .transition()
       .ease(d3.easeLinear)
-      .duration(function (ball) {
-        return (ball.next.originT - ball.current.originT) * 1000;
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
       })
-      .attr("cx", function (ball) {
-        return ball.next.origin.x;
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
       })
-      .attr("cy", function (ball) {
-        return ball.next.origin.y;
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
       })
-      .on("end", function (ball) {
-        ctx.beginPath();
-        ctx.moveTo(ball.current.origin.x + 400, ball.current.origin.y + 200);
-        ctx.lineTo(ball.next.origin.x + 400, ball.next.origin.y + 200);
-        ctx.strokeStyle = "blue";
-        ctx.stroke();
-        ball.current = ball.next;
-        ball.next = decideNextBounce(ball.current, scene);
-        if (whichBatch === batch) {
-          d3.select(this).call(transitionToNext(whichBatch, scene));
+      .on("end", function (bola) {
+        try {
+          ctx.beginPath();
+          ctx.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx.stroke();
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          if (nDeIteracion == iteracion)
+            d3.select(this).call(
+              siguienteTransicion(nDeIteracion, escena, pintaBolaBlanca)
+            );
+        } catch (e) {
+          console.error("");
         }
       });
   };
 }
+
+demuestraSensibilidad(escena, añadeFondoBunimovich);
