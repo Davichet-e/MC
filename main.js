@@ -363,7 +363,7 @@ function decideSiguienteBote(ball, escena) {
 }
 
 const svg = d3
-  .select(".contenedor-billar")
+  .select("#contenedor-sensibilidad")
   .append("svg")
   .style("position", "absolute")
   .attr("width", 800)
@@ -389,10 +389,10 @@ function añadeFondoBunimovich(sel) {
 
 const stadiumBg = svg.append("g");
 
-d3.select(".contenedor-billar").style("position", "relative");
+d3.select("#contenedor-sensibilidad").style("position", "relative");
 
 const canvas = d3
-  .select(".contenedor-billar")
+  .select("#contenedor-sensibilidad")
   .append("canvas")
   .style("position", "absolute")
   .attr("width", 800)
@@ -400,7 +400,7 @@ const canvas = d3
   .style("opacity", 0.7)
   .node();
 
-d3.select(".contenedor-billar")
+d3.select("#contenedor-sensibilidad")
   .append("div")
   .style("position", "relative")
   .style("height", "420px")
@@ -512,3 +512,133 @@ function siguienteTransicion(nDeIteracion, escena, pintaBolaBlanca) {
 }
 
 demuestraSensibilidad(escena, añadeFondoBunimovich);
+
+///
+const svg2 = d3
+  .select("#contenedor-2")
+  .append("svg")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400);
+
+const stadiumBg2 = svg2.append("g");
+
+d3.select("#contenedor-2").style("position", "relative");
+
+const canvas2 = d3
+  .select("#contenedor-2")
+  .append("canvas")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400)
+  .style("opacity", 0.7)
+  .node();
+
+d3.select("#contenedor-2")
+  .append("div")
+  .style("position", "relative")
+  .style("height", "420px")
+  .style("width", "800px");
+
+const ctx2 = canvas2.getContext("2d");
+
+// Esto indica de donde nacen las bolas
+const svgScene2 = svg2.append("g").attr("transform", "translate(400, 200)");
+
+let bolas2 = [];
+
+function añadeBolas2(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
+  for (let i = 0; i < n; ++i) {
+    const rot = Transform.rotate(angleScale(i + (0.5 * Math.random() - 0.25)));
+    bolas2.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
+    });
+  }
+}
+
+const canvasBola2 = svgScene2.append("g");
+
+let iteracion2 = 0;
+const velocidad2 = 5;
+function demuestra2(escena, backgroundFunction) {
+  ++iteracion2;
+  bolas2 = [];
+  ctx2.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
+
+  backgroundFunction(stadiumBg2);
+
+  añadeBolas2(
+    2,
+    new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
+    new Vec2(80, 80),
+    0.00001,
+    velocidad2
+  );
+
+  const todasLasBolas = canvasBola2.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
+
+  const bolasVerdes = canvasBola2
+    .selectAll("*")
+    .data(bolas2)
+    .enter()
+    .append("circle")
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
+    })
+    .attr("cx", function (ball) {
+      return ball.current.origin.x;
+    })
+    .attr("cy", function (ball) {
+      return ball.current.origin.y;
+    })
+    .attr("r", 5)
+    .attr("fill", "green");
+  bolasVerdes.call(siguienteTransicion2(iteracion, escena, false));
+
+  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
+  bolasAzules.call(siguienteTransicion2(iteracion, escena, true));
+}
+
+function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
+  return function (sel) {
+    sel
+      .transition()
+      .ease(d3.easeLinear)
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
+      })
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
+      })
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
+      })
+      .on("end", function (bola) {
+        try {
+          ctx2.beginPath();
+          ctx2.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx2.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          ctx2.lineWidth = 3;
+          ctx2.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx2.stroke();
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          if (nDeIteracion == iteracion2)
+            d3.select(this).call(
+              siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca)
+            );
+        } catch (e) {
+          console.error("2");
+        }
+      });
+  };
+}
+
+demuestra2(escena, añadeFondoBunimovich);
