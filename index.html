@@ -34,6 +34,9 @@
     ></script>
 
     <script defer src="./main.js"></script>
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
   </head>
   <body>
     <main class="container">
@@ -91,7 +94,43 @@
 
     </section>
     <section>
-      <div id="contenedor-2"></div>
+
+      <br/>
+
+      <h3 style="margin-top: 100px;">Periodícidad del sistema</h3>
+
+        <p>
+          Es posible encontrar orbitas peridicas en el stadium de Bunimovich. </p>
+
+          <p>Una órbita, en el contexto de los sistemas de billar y, en particular, del estadio Bunimovich, es la secuencia de colisiones con el límite ∂D en el orden en que ocurren. 
+            Esta secuencia de colisiones corresponde a una trayectoria de billar. </p>
+            <p>Uno puede pensar en el billar comenzando su movimiento y luego chocando con el punto A en el límite, rebotando y luego chocando con otro punto B en el límite. El billar podría colisionar con el punto C y así sucesivamente. Por tanto, los puntos A, B y C son en realidad pares posición-dirección. La órbita periódica sería la parte de una secuencia que se repite.</p>
+          
+        <p>Por ejemplo, digamos que rebota en línea recta de modo que su ángulo es perpendicular con el borde del billar: con vector $$\overrightarrow{v} = \langle 0, b \rangle  \quad \textrm{with  b} \lt 0$$ y dirección $$\theta = -90$$, luego llamemos al punto en el límite donde choca en el lado opuesto, punto "B". </p>
+          <p> La órbita de este billar sería entonces AB porque rebotaría hacia adelante y hacia atrás entre los puntos A y B indefinidamente. 
+            La órbita periódica, o la órbita que se repite, sería A, B, y llamamos A y B los puntos periódicos.</p>
+
+      <div id="contenedor-periodicidad">
+      </div>
+
+
+      <h4 style="margin-top: 50px;">Densidad: Puntos periódicos densos</h4>
+
+
+      <p>Los puntos periódicos de un sistema dinámico $$(D, f)$$ se dice que son densos si para cualquier subconjunto U ⊂ D siempre existe un punto periódico en U.</p>
+      <p>Para que el estadio de Bunimovich sea un sistema sea caótico, se debe verificar que los puntos periódicos del sistema f son denso en el dominio D.</p>
+      <p>En el contexto del billar, esto se traduce como: el conjunto de puntos periódicos debe ser denso en el espacio de colisión M. El último se puede interpretar como: dado cualquier par posición-dirección p en M, p es un punto en una órbita periódica o hay un punto periódico "arbitrariamente cercano" a p.</p>
+
+        <p>En el contexto del billar decimos que los puntos periódicos son densos en el espacio de colisión M precisamente cuando se da cualquier p ∈ M y cualquier &epsilon; > 0 podemos encontrar un punto periódico q&epsilon; ∈ M con la distancia entre p y q&epsilon; menor que &epsilon;. Observe que si p es un punto periódico, podemos establecer q&epsilon; = p y la distancia entre los dos puntos sería 0, que es menor que &epsilon;, cumpliendo así la condición.</p>
+
+
+        <p>i algún punto en el espacio de fase es un punto periódico o está "arbitrariamente cerca" de un punto periódico, entonces se cumple la condición de densidad. El cual hemos encontrado.</p>
+        <p>Si se hace zoom en los puntos de colisión del billar se podrá ver que son diferentes puntos, muy cercanos entre sí.</p>
+
+      <div id="contenedor-periodicidad-densidad"></div>
+      <div><h5>Puntos de colisión AB</h5><ol id="puntos-colision"></ol></div>
+
+      <p>Al ver los puntos de colisión, vemos que la condición de densidad se cumple para dado cualquier punto de colisión p, siendo p un punto periódico o dada cualquier distancia positiva &epsilon; podemos encontrar un punto periódico q&epsilon; donde la distancia entre py q&epsilon; es menor que &epsilon;. </p>
     </section>
     </main>
   </body>

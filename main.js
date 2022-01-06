@@ -515,7 +515,7 @@ demuestraSensibilidad(escena, añadeFondoBunimovich);
 
 ///
 const svg2 = d3
-  .select("#contenedor-2")
+  .select("#contenedor-periodicidad")
   .append("svg")
   .style("position", "absolute")
   .attr("width", 800)
@@ -523,10 +523,10 @@ const svg2 = d3
 
 const stadiumBg2 = svg2.append("g");
 
-d3.select("#contenedor-2").style("position", "relative");
+d3.select("#contenedor-periodicidad").style("position", "relative");
 
 const canvas2 = d3
-  .select("#contenedor-2")
+  .select("#contenedor-periodicidad")
   .append("canvas")
   .style("position", "absolute")
   .attr("width", 800)
@@ -534,7 +534,7 @@ const canvas2 = d3
   .style("opacity", 0.7)
   .node();
 
-d3.select("#contenedor-2")
+d3.select("#contenedor-periodicidad")
   .append("div")
   .style("position", "relative")
   .style("height", "420px")
@@ -573,11 +573,11 @@ function demuestra2(escena, backgroundFunction) {
   backgroundFunction(stadiumBg2);
 
   añadeBolas2(
-    2,
-    new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
-    new Vec2(80, 80),
+    1,
+    new Vec2(0, 0), // center
+    new Vec2(0, -90), //direction
     0.00001,
-    velocidad2
+    5
   );
 
   const todasLasBolas = canvasBola2.selectAll("*");
@@ -598,7 +598,7 @@ function demuestra2(escena, backgroundFunction) {
     .attr("cy", function (ball) {
       return ball.current.origin.y;
     })
-    .attr("r", 5)
+    .attr("r", 15)
     .attr("fill", "green");
   bolasVerdes.call(siguienteTransicion2(iteracion, escena, false));
 
@@ -625,9 +625,20 @@ function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
           ctx2.beginPath();
           ctx2.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
           ctx2.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          let x = bola.next.origin.x + 400
+          let y = position(bola.next.origin.y + 190);
+
           ctx2.lineWidth = 3;
           ctx2.strokeStyle = pintaBolaBlanca ? "white" : "black";
           ctx2.stroke();
+          
+
+          ctx2.font = "40px Calibri"; // Use pixels instead of points
+          ctx2.fillStyle="#000000";
+
+          ctx2.fillText(usedLetterconter%2==0 ? "A":"B", x, y);
+          usedLetterconter++;
+
           bola.current = bola.next;
           bola.next = decideSiguienteBote(bola.current, escena);
           if (nDeIteracion == iteracion2)
@@ -641,4 +652,205 @@ function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
   };
 }
 
+function position(y){
+  if(y<=0){
+    return y + 50
+  }else{
+    return y
+  }
+}
+
+
+var usedLetterconter=0;
+
 demuestra2(escena, añadeFondoBunimovich);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// Periodicidad, segunda parte: Densidad 
+const svg3 = d3
+  .select("#contenedor-periodicidad-densidad")
+  .append("svg")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400);
+
+const stadiumBg3 = svg3.append("g");
+
+d3.select("#contenedor-periodicidad-densidad").style("position", "relative");
+
+const canvas3 = d3
+  .select("#contenedor-periodicidad-densidad")
+  .append("canvas")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400)
+  .style("opacity", 0.7)
+  .node();
+
+d3.select("#contenedor-periodicidad-densidad")
+  .append("div")
+  .style("position", "relative")
+  .style("height", "420px")
+  .style("width", "800px");
+
+const ctx3 = canvas3.getContext("2d");
+
+// Esto indica de donde nacen las bolas
+const svgScene3 = svg3.append("g").attr("transform", "translate(400, 200)");
+
+let bolas3 = [];
+
+function añadeBolas3(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
+  for (let i = 0; i < n; ++i) {
+    const rot = Transform.rotate(angleScale(i + (0.5 * Math.random() - 0.25)));
+    bolas3.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
+    });
+  }
+}
+
+const canvasBola3 = svgScene3.append("g");
+
+let iteracion3 = 0;
+const velocidad3 = 5;
+function demuestra3(escena, backgroundFunction) {
+  ++iteracion3;
+  bolas3 = [];
+  ctx3.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
+
+  backgroundFunction(stadiumBg3);
+
+  añadeBolas3(
+    1,
+    new Vec2(0, 0), // center
+    new Vec2(0, 90), //direction
+    0.00001,
+    5
+  );
+
+  const todasLasBolas = canvasBola3.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
+
+  const bolasVerdes = canvasBola3
+    .selectAll("*")
+    .data(bolas3)
+    .enter()
+    .append("circle")
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
+    })
+    .attr("cx", function (ball) {
+      return ball.current.origin.x;
+    })
+    .attr("cy", function (ball) {
+      return ball.current.origin.y;
+    })
+    .attr("r", 15)
+    .attr("fill", "green");
+  bolasVerdes.call(siguienteTransicion3(iteracion, escena, false));
+
+  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
+  bolasAzules.call(siguienteTransicion3(iteracion, escena, true));
+}
+
+function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
+  return function (sel) {
+    sel
+      .transition()
+      .ease(d3.easeLinear)
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
+      })
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
+      })
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
+      })
+      .on("end", function (bola) {
+        try {
+          ctx3.beginPath();
+          ctx3.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx3.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          let x = bola.next.origin.x + 400
+          let y = position(bola.next.origin.y + 190);
+
+          ctx3.lineWidth = 3;
+          ctx3.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx3.stroke();
+          
+
+          if (previousPointPosition != null && usedLetterconter3>=2){
+          
+            ctx3.fillStyle="#f0f";
+            ctx3.fillText(alphabet[usedLetterconter3-2], x,y);
+            //console.log("entra aqui");
+          }
+          
+          ctx3.font = "40px Calibri"; // Use pixels instead of points
+          ctx3.fillStyle="#000000";
+          ctx3.fillText(abecedary(), x, y);
+          
+          updatepreviousPointPosition(x,y);
+          var li = document.createElement("li");
+          li.appendChild(document.createTextNode(x,y));
+          document.getElementById("puntos-colision").appendChild(li);
+  
+
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          if (nDeIteracion == iteracion3)
+            d3.select(this).call(
+              siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca)
+            );
+        } catch (e) {
+          console.error("2");
+        }
+      });
+  };
+}
+
+function updatepreviousPointPosition(x,y){
+  previousPointPosition=[];
+  previousPointPosition.push(x);
+  previousPointPosition.push(y);
+  
+}
+
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+var usedLetterconter3=0;
+var alphabetLetter="A";
+var previousPointPosition=null;
+
+function abecedary(){
+  //console.log(alphabet.length);
+  alphabetLetter = alphabet[usedLetterconter3];
+  if (usedLetterconter3 < alphabet.length-1){
+    usedLetterconter3++;
+  }else{
+    usedLetterconter3=0;
+  }
+  
+  return alphabetLetter;
+}
+
+demuestra3(escena, añadeFondoBunimovich);

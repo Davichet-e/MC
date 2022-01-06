@@ -25,3 +25,10 @@ section {
 #contenedor-sensibilidad {
   margin-top: 2rem;
 }
+
+
+#puntos-colision{
+  overflow: scroll;
+  width: 410px;
+  height: 210px;
+}
