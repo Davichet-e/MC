@@ -1,90 +1,81 @@
-<!-- This layout assumes:
+<!-- 
+  Trabajo para la asignatura de Matemáticas para la Computación
 
- - the existence of a main.js script file in the same directory as the file using the layout
- - the existence of a main.css CSS file in the same directory as the file using the layout
+  Autores: 
+  Rebeca Sarai Gonzalez Guerra
+  David Garcia Morillo
 
  -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <title>Bunimovich Stadium</title>
 
-    <link rel="stylesheet" href="main.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Roboto:wght@300&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      defer
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"
-    ></script>
-    <script
-      defer
-      type="text/javascript"
-      src="https:////cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"
-    ></script>
-    <script
-      defer
-      type="text/javascript"
-      src="https://unpkg.com/d3@7.2.1/dist/d3.min.js"
-    ></script>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>Bunimovich Stadium</title>
 
-    <script defer src="./main.js"></script>
+  <link rel="stylesheet" href="main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Roboto:wght@300&display=swap"
+    rel="stylesheet" />
+  <script defer type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script defer type="text/javascript"
+    src="https:////cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+  <script defer type="text/javascript" src="https://unpkg.com/d3@7.2.1/dist/d3.min.js"></script>
 
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
-  </head>
-  <body>
-    <main class="container">
-      <h1 id="titulo">Estadio de Bunimóvich</h1>
+  <script defer src="./main.js"></script>
 
-      <p>
-        En este trabajo, vamos a presentar una visualización del conocido como
-        <i>Estadio de Bunimóvich</i>. En el cual, intentaremos demostrar
-        mediante visualizaciones hechas en JS haciendo uso de librerías
-        externas, como <a href="https://github.com/d3/d3">D3.js</a>,
-        <a href="https://github.com/cscheid/cscheid.net">cscheid</a>, o
-        <a href="https://github.com/jquery/jquery">jquery</a>, las propiedades
-        caóticas del mismo.
-      </p>
-      <p>
-        También queremos destacar el paper que citamos a continuación como
-        bibliografía:
-        <cite
-          >Shoemaker, Randal, "Modeling a chaotic billiard: The Bunimovich
-          Stadium" (2019). Senior Honors Projects, 2010-2019. 715.
-        </cite>
-      </p>
-      <p>
-        Consideramos oportuno una rápida mención a la geometría del
-        <i>Estadio de Bunimóvich</i>, la cual es simplemente un rectángulo con
-        dos semicirculos en direcciones opuestas.
-      </p>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+</head>
 
-      <p>
-        Para demostrar que un sistema es caótico, es necesario demostrar 3 propiedades:
-        <ul>
-          <li>Sensibilidad a condiciones iniciales</li>
-          <li>Periodícidad</li>
-          <li>Transitividad topológica</li>
-        </ul>
+<body>
+  <main class="container">
+    <h1 id="titulo">Estadio de Bunimóvich</h1>
+
+    <p>
+      En este trabajo, vamos a presentar una visualización del conocido como
+      <i>Estadio de Bunimóvich</i>. En el cual, intentaremos demostrar
+      mediante visualizaciones hechas en JS haciendo uso de librerías
+      externas, como <a href="https://github.com/d3/d3">D3.js</a>,
+      <a href="https://github.com/cscheid/cscheid.net">cscheid</a>, o
+      <a href="https://github.com/jquery/jquery">jquery</a>, las propiedades
+      caóticas del mismo.
+    </p>
+    <p>
+      También queremos destacar el paper que citamos a continuación como
+      bibliografía:
+      <cite>Shoemaker, Randal, "Modeling a chaotic billiard: The Bunimovich
+        Stadium" (2019). Senior Honors Projects, 2010-2019. 715.
+      </cite>
+    </p>
+    <p>
+      Consideramos oportuno una rápida mención a la geometría del
+      <i>Estadio de Bunimóvich</i>, la cual es simplemente un rectángulo con
+      dos semicirculos en direcciones opuestas.
+    </p>
+
+    <p>
+      Para demostrar que un sistema es caótico, es necesario demostrar 3 propiedades:
+    <ul>
+      <li>Sensibilidad a condiciones iniciales</li>
+      <li>Periodícidad</li>
+      <li>Transitividad topológica</li>
+    </ul>
+    </p>
+
+    <p>Procedamos a visualizarlas una a una.</p>
+
+    <section>
+      <h3>Sensibilidad a condiciones iniciales.</h3>
+      <p>Para ello, vamos a lanzar 2 bolas con (casi) la misma dirección aleatoria y velocidad, variando la dirección en
+        un 0.001%.
+        Una de las bolas será verde, y dejará un rastro negro, y la otra azul, dejando un rastro blanco.
       </p>
 
-      <p>Procedamos a visualizarlas una a una.</p>
-
-      <section>
-        <h3>Sensibilidad a condiciones iniciales.</h3>
-        <p>Para ello, vamos a lanzar 2 bolas con (casi) la misma dirección aleatoria y velocidad, variando la dirección en un 0.001%.
-          Una de las bolas será verde, y dejará un rastro negro, y la otra azul, dejando un rastro blanco.
-        </p>
-
-        <p>Al principio del experimento, se ve solo una bola y un recorrido, debido a que la segunda está superpuesta con la primera,
-          pero a lo largo de las iteraciones, se va viendo cómo se van alejando.</p>
-        
+      <p>Al principio del experimento, se ve solo una bola y un recorrido, debido a que la segunda está superpuesta con
+        la primera,
+        pero a lo largo de las iteraciones, se va viendo cómo se van alejando.</p>
 
 
 
@@ -95,20 +86,14 @@
     </section>
     <section>
 
-      <br/>
+      <br />
 
       <h3 style="margin-top: 100px;">Periodícidad del sistema</h3>
 
-        <p>
-          Es posible encontrar orbitas peridicas en el stadium de Bunimovich. </p>
-
-          <p>Una órbita, en el contexto de los sistemas de billar y, en particular, del estadio Bunimovich, es la secuencia de colisiones con el límite ∂D en el orden en que ocurren. 
-            Esta secuencia de colisiones corresponde a una trayectoria de billar. </p>
-            <p>Uno puede pensar en el billar comenzando su movimiento y luego chocando con el punto A en el límite, rebotando y luego chocando con otro punto B en el límite. El billar podría colisionar con el punto C y así sucesivamente. Por tanto, los puntos A, B y C son en realidad pares posición-dirección. La órbita periódica sería la parte de una secuencia que se repite.</p>
-          
-        <p>Por ejemplo, digamos que rebota en línea recta de modo que su ángulo es perpendicular con el borde del billar: con vector $$\overrightarrow{v} = \langle 0, b \rangle  \quad \textrm{with  b} \lt 0$$ y dirección $$\theta = -90$$, luego llamemos al punto en el límite donde choca en el lado opuesto, punto "B". </p>
-          <p> La órbita de este billar sería entonces AB porque rebotaría hacia adelante y hacia atrás entre los puntos A y B indefinidamente. 
-            La órbita periódica, o la órbita que se repite, sería A, B, y llamamos A y B los puntos periódicos.</p>
+      <p>
+        Es posible encontrar orbitas peridicas de varios ordenes en el stadium de Bunimovich. A continuación vamos
+        visualizar algunas de ellas. </p>
+        <p> Puntos periódicos de orden 2</p>
 
       <div id="contenedor-periodicidad">
       </div>
@@ -130,32 +115,41 @@
       <h4 style="margin-top: 50px;">Densidad: Puntos periódicos densos</h4>
 
 
-      <p>Los puntos periódicos de un sistema dinámico $$(D, f)$$ se dice que son densos si para cualquier subconjunto U ⊂ D siempre existe un punto periódico en U.</p>
-      <p>Para que el estadio de Bunimovich sea un sistema sea caótico, se debe verificar que los puntos periódicos del sistema f son denso en el dominio D.</p>
-      <p>En el contexto del billar, esto se traduce como: el conjunto de puntos periódicos debe ser denso en el espacio de colisión M. El último se puede interpretar como: dado cualquier par posición-dirección p en M, p es un punto en una órbita periódica o hay un punto periódico "arbitrariamente cercano" a p.</p>
+      <p>Los puntos periódicos de un sistema dinámico $$(D, f)$$ se dice que son densos si para cualquier subconjunto U
+        ⊂ D siempre existe un punto periódico en U.</p>
+      <p>Para que el estadio de Bunimovich sea un sistema sea caótico, se debe verificar que los puntos periódicos del
+        sistema f son densos en el dominio D.</p>
+      <p>En el contexto del billar, esto se traduce como: el conjunto de puntos periódicos debe ser denso en el espacio
+        de colisión (Puntos en la pared del billar donde la bola golpea). Esto se puede interpretar como: para cualquier par posición-dirección p en el espacio de collisión, p es un punto
+        en una órbita periódica o hay un punto periódico cercano a p.</p>
 
-        <p>En el contexto del billar decimos que los puntos periódicos son densos en el espacio de colisión M precisamente cuando se da cualquier p ∈ M y cualquier &epsilon; > 0 podemos encontrar un punto periódico q&epsilon; ∈ M con la distancia entre p y q&epsilon; menor que &epsilon;. Observe que si p es un punto periódico, podemos establecer q&epsilon; = p y la distancia entre los dos puntos sería 0, que es menor que &epsilon;, cumpliendo así la condición.</p>
-
-
-        <p>i algún punto en el espacio de fase es un punto periódico o está "arbitrariamente cerca" de un punto periódico, entonces se cumple la condición de densidad. El cual hemos encontrado.</p>
-        <p>Si se hace zoom en los puntos de colisión del billar se podrá ver que son diferentes puntos, muy cercanos entre sí.</p>
+        <p>Aquí podemos ver que los puntos de la órbita estan a una distancia &epsilon;>0 de ser periódicos. </p>
 
       <div id="contenedor-periodicidad-densidad"></div>
-      <div><h5>Puntos de colisión AB</h5><ol id="puntos-colision"></ol></div>
+      <div>
+        <h5>Puntos de colisión AB</h5>
+        <ol id="puntos-colision"></ol>
+      </div>
 
-      <p>Al ver los puntos de colisión, vemos que la condición de densidad se cumple para dado cualquier punto de colisión p, siendo p un punto periódico o dada cualquier distancia positiva &epsilon; podemos encontrar un punto periódico q&epsilon; donde la distancia entre py q&epsilon; es menor que &epsilon;. </p>
+      <p>Al ver los puntos de colisión, vemos que la condición de densidad se cumple para dado cualquier punto de
+        colisión p, siendo p un punto periódico o dada cualquier distancia positiva &epsilon; podemos encontrar un punto
+        periódico q&epsilon; donde la distancia entre py q&epsilon; es menor que &epsilon;. </p>
 
     </section>
 
     <section>
       <h3 style="margin-top: 100px;">Transitividad</h3>
 
-      <p>Se dice que un sistema din´amico (D, f) tiene la propiedad de mezcla (o es topológicamente transitivo) si dados dos intervalos I, J ⊂ D de longitud positiva y arbitrariamente pequeños, entonces existe x ∈ I tal que para algún k ≥ 0 tal que $$f_k(x)\in J$$.</p>
-
+      <p>Se dice que un sistema dinámico (D, f) tiene la propiedad de mezcla (o es topológicamente transitivo) si dados
+        dos intervalos I, J ⊂ D de longitud positiva y arbitrariamente pequeños, entonces existe x ∈ I tal que para
+        algún k ≥ 0 tal que $$f_k(x)\in J$$.</p>
+        <p> El concepto que acabamos desarrollar se extende en mayor profundidad en el artículo referenciado al principio del presente trabajo.</p>
+        <p>En el siguiente estadio podemos ver como el trayecto de la bola azul cubre los puntos de las otras dos bolas: amarilla y verde. Siendo verde un vector AB y amarillo FD, el trajecto de la bola azul pasa por todos estos puntos, siendo ACDE.</p>
       <div id="contenedor-transitividad"></div>
       <button id="reinicio-transitividad">Reinicia Experimento</button>
 
     </section>
-    </main>
-  </body>
+  </main>
+</body>
+
 </html>

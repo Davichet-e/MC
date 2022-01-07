@@ -989,7 +989,7 @@ function demuestra3(escena, backgroundFunction) {
     1,
     new Vec2(0, 0), // center
     new Vec2(0, 90), //direction
-    0.0001,
+    0.00000000001,
     velocidad3
   );
 
@@ -1300,14 +1300,14 @@ function demuestra6(escena, backgroundFunction) {
     .attr("r", 15)
     .attr("fill", "green");
 
+  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
+  const bolasAmarillas = d3.select(bolasVerdes.nodes()[2]).attr("fill", "yellow");
 
   bolasVerdes.call(siguienteTransicion6(iteracion6, escena, true,contadorIterTransBolaVerde, stopITerBolaVerde, "green"));
 
-  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
   bolasAzules.call(siguienteTransicion6(iteracion6, escena, false, contadorIterTransBolaAzul, stopITerBolaAzul, "blue"));
 
 
-  const bolasAmarillas = d3.select(bolasVerdes.nodes()[2]).attr("fill", "yellow");
   bolasAmarillas.call(siguienteTransicion6(iteracion6, escena, true, contadorIterTransBolaAmarillo, stopITerBolaAmarillo, "yellow"));
 
 }
@@ -1335,7 +1335,7 @@ function siguienteTransicion6(nDeIteracion, escena, pintaBolaBlanca, contadorIte
           ctx6.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
           ctx6.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
           let x = bola.next.origin.x + 400
-          let y = position(bola.next.origin.y + 190);
+          let y = bola.next.origin.y + 190;
           console.log(color+": " + x,y);
 
           ctx6.lineWidth = 3;
@@ -1422,3 +1422,5 @@ demuestra6(escena, añadeFondoBunimovich);
 document.getElementById("reinicio-transitividad").addEventListener("click", () => {
   demuestra6(escena, añadeFondoBunimovich);
 });
+
+document.getElementById("reinicio-transitividad").click();
