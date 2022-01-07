@@ -575,8 +575,8 @@ function demuestra2(escena, backgroundFunction) {
   añadeBolas2(
     1,
     new Vec2(0, 0), // center
-    new Vec2(0, -90), //direction
-    0.00001,
+    new Vec2(0, -90), // direction
+    0.000000000000001,
     5
   );
 
@@ -600,10 +600,10 @@ function demuestra2(escena, backgroundFunction) {
     })
     .attr("r", 15)
     .attr("fill", "green");
-  bolasVerdes.call(siguienteTransicion2(iteracion, escena, false));
+  bolasVerdes.call(siguienteTransicion2(iteracion2, escena, false));
 
   const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
-  bolasAzules.call(siguienteTransicion2(iteracion, escena, true));
+  bolasAzules.call(siguienteTransicion2(iteracion2, escena, true));
 }
 
 function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
@@ -766,10 +766,10 @@ function demuestra3(escena, backgroundFunction) {
     })
     .attr("r", 15)
     .attr("fill", "green");
-  bolasVerdes.call(siguienteTransicion3(iteracion, escena, false));
+  bolasVerdes.call(siguienteTransicion3(iteracion3, escena, false));
 
   const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
-  bolasAzules.call(siguienteTransicion3(iteracion, escena, true));
+  bolasAzules.call(siguienteTransicion3(iteracion3, escena, true));
 }
 
 function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
@@ -797,8 +797,8 @@ function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
           ctx3.lineWidth = 3;
           ctx3.strokeStyle = pintaBolaBlanca ? "white" : "black";
           ctx3.stroke();
-          
 
+          ctx3.font = "40px Calibri"; // Use pixels instead of points
           if (previousPointPosition != null && usedLetterconter3>=2){
           
             ctx3.fillStyle="#f0f";
@@ -806,7 +806,7 @@ function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
             //console.log("entra aqui");
           }
           
-          ctx3.font = "40px Calibri"; // Use pixels instead of points
+          
           ctx3.fillStyle="#000000";
           ctx3.fillText(abecedary(), x, y);
           
@@ -854,3 +854,352 @@ function abecedary(){
 }
 
 demuestra3(escena, añadeFondoBunimovich);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/// Transitividad
+const svg4 = d3
+  .select("#contenedor-transitividad")
+  .append("svg")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400);
+
+const stadiumBg4 = svg4.append("g");
+
+d3.select("#contenedor-transitividad").style("position", "relative");
+
+const canvas4 = d3
+  .select("#contenedor-transitividad")
+  .append("canvas")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400)
+  .style("opacity", 0.7)
+  .node();
+
+d3.select("#contenedor-transitividad")
+  .append("div")
+  .style("position", "relative")
+  .style("height", "420px")
+  .style("width", "800px");
+
+const ctx4 = canvas4.getContext("2d");
+
+// Esto indica de donde nacen las bolas
+const svgScene4 = svg4.append("g").attr("transform", "translate(400, 200)");
+
+let bolas4 = [];
+
+function añadebolas4(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
+  for (let i = 0; i < n; ++i) {
+    const rot = Transform.rotate(angleScale(i + (0.5 * Math.random() - 0.25)));
+    bolas4.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
+    });
+  }
+}
+
+const canvasBola4 = svgScene4.append("g");
+
+let iteracion4 = 0;
+const velocidad4 = 5;
+function demuestra4(escena, backgroundFunction) {
+  ++iteracion4;
+  bolas4 = [];
+  ctx4.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
+
+  backgroundFunction(stadiumBg4);
+
+/*
+  añadebolas4(
+    1,
+    new Vec2(50, 20), // center
+    new Vec2(30, 52), //direction
+    0.0,
+    5
+  );
+
+  añadebolas4(
+    1,
+    new Vec2(50, 20), // center
+    new Vec2(30, 52.25), //direction
+    0.0,
+    5
+  );
+
+  añadebolas4(
+    1,
+    new Vec2(-300, -150), // center
+    new Vec2(-60, -20), //direction
+    0.0,
+    5
+  );*/
+
+  añadebolas4(
+    1,
+    new Vec2(147, 190), // center
+    new Vec2(30, 52), //direction
+    0.0,
+    5
+  );
+
+  añadebolas4(
+    1,
+    new Vec2(50, 20), // center
+    new Vec2(30, 52.15), //direction
+    0.0,
+    5
+  );
+
+  añadebolas4(
+    1,
+    new Vec2(-300, -150), // center
+    new Vec2(-62, -20), //direction
+    0.0,
+    5
+  );
+
+  const todasLasBolas = canvasBola4.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
+
+  const bolasVerdes = canvasBola4
+    .selectAll("*")
+    .data(bolas4)
+    .enter()
+    .append("circle")
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
+    })
+    .attr("cx", function (ball) {
+      return ball.current.origin.x;
+    })
+    .attr("cy", function (ball) {
+      return ball.current.origin.y;
+    })
+    .attr("r", 15)
+    .attr("fill", "green");
+
+
+  bolasVerdes.call(siguienteTransicion4(iteracion4, escena, true,contadorIterTransBolaVerde, stopITerBolaVerde, "green"));
+
+  const bolasAzules = d3.select(bolasVerdes.nodes()[1]).attr("fill", "blue");
+  bolasAzules.call(siguienteTransicion4(iteracion4, escena, false, contadorIterTransBolaAzul, stopITerBolaAzul, "blue"));
+
+
+  const bolasAmarillas = d3.select(bolasVerdes.nodes()[2]).attr("fill", "yellow");
+  bolasAmarillas.call(siguienteTransicion4(iteracion4, escena, true, contadorIterTransBolaAmarillo, stopITerBolaAmarillo, "yellow"));
+
+}
+
+function siguienteTransicion4(nDeIteracion, escena, pintaBolaBlanca, contadorIterTransBola, stopITerBola, color) {
+
+  //console.log(nDeIteracion);
+
+  return function (sel) {
+    sel
+      .transition()
+      .ease(d3.easeLinear)
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
+      })
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
+      })
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
+      })
+      .on("end", function (bola) {
+        try {
+          ctx4.beginPath();
+          ctx4.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx4.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          let x = bola.next.origin.x + 400
+          let y = position(bola.next.origin.y + 190);
+          console.log(color+": " + x,y);
+
+          ctx4.lineWidth = 3;
+          ctx4.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx4.stroke();
+
+          //console.log(stopITerBola);
+
+          ctx4.font = "18px Calibri"; // Use pixels instead of points
+          ctx4.fillStyle= color;
+          console.log(x,y);
+
+          ctx4.strokeStyle = 'black';
+          ctx4.lineWidth = 2;
+
+          var newPos = getNewPos(Math.round((x + Number.EPSILON) * 100) / 100, Math.round((y + Number.EPSILON) * 100) / 100, color);
+          console.log("NewPos: "+ newPos[0] + ", "+ newPos[1]);
+          ctx4.strokeText(getLetter(color)[contadorIterTransBola] + "("+newPos[0].toString()+","+ newPos[1].toString()+")", newPos[0], newPos[1]);
+          ctx4.fillText( getLetter(color)[contadorIterTransBola] + "("+newPos[0].toString()+","+ newPos[1].toString()+")", newPos[0], newPos[1]);
+
+  
+
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          contadorIterTransBola++;
+          if (nDeIteracion == iteracion4 && contadorIterTransBola<stopITerBola ){
+            d3.select(this).call(
+              siguienteTransicion4(nDeIteracion, escena, pintaBolaBlanca, contadorIterTransBola, stopITerBola, color)
+            );
+            console.log("Contador Iter Transividad "+contadorIterTransBola); 
+          }
+        } catch (e) {
+          console.error("2");
+        }
+      });
+  };
+}
+
+
+function getLetter(color){
+  var res= ab;
+  switch (color) {
+    case "green":
+      res=ab;
+      break;
+
+    case "blue":
+      res = acde;
+      break;
+  
+    default:
+      res=fd;
+      break;
+  }
+  return res;
+}
+
+
+const ab = ["A","B"];
+const acde = ["A", "C", "D", "E"];
+const fd = ["F","D","C"]
+
+function getNewPos(x,y, color){
+  var res = [x,y];
+  
+  if(x>600){
+    res[0] = x-100;
+  }
+  if (color == "blue" && y<101){
+    res[1] = y + 40;
+  } else if (color == "blue" && y>100){
+    res[1] = y - 20;
+  }
+  return res;
+}
+
+contadorIterTransBolaVerde = 0;
+contadorIterTransBolaAzul = 0;
+contadorIterTransBolaAmarillo = 0;
+stopITerBolaVerde=2;
+stopITerBolaAzul=4;
+stopITerBolaAmarillo=2;
+
+demuestra4(escena, añadeFondoBunimovich);
+
+
+document.getElementById("reinicio-transitividad").addEventListener("click", () => {
+  demuestraSensibilidad(escena, añadeFondoBunimovich);
+});
