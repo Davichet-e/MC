@@ -575,9 +575,9 @@ function demuestra2(escena, backgroundFunction) {
   añadeBolas2(
     1,
     new Vec2(0, 0), // center
-    new Vec2(0, -90), // direction
-    0.000000000000001,
-    5
+    new Vec2(0, -90), //direction
+    0.00001,
+    velocidad2
   );
 
   const todasLasBolas = canvasBola2.selectAll("*");
@@ -625,18 +625,17 @@ function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
           ctx2.beginPath();
           ctx2.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
           ctx2.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
-          let x = bola.next.origin.x + 400
+          let x = bola.next.origin.x + 400;
           let y = position(bola.next.origin.y + 190);
 
           ctx2.lineWidth = 3;
           ctx2.strokeStyle = pintaBolaBlanca ? "white" : "black";
           ctx2.stroke();
-          
 
           ctx2.font = "40px Calibri"; // Use pixels instead of points
-          ctx2.fillStyle="#000000";
+          ctx2.fillStyle = "#000000";
 
-          ctx2.fillText(usedLetterconter%2==0 ? "A":"B", x, y);
+          ctx2.fillText(usedLetterconter % 2 == 0 ? "A" : "B", x, y);
           usedLetterconter++;
 
           bola.current = bola.next;
@@ -652,34 +651,282 @@ function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
   };
 }
 
-function position(y){
-  if(y<=0){
-    return y + 50
-  }else{
-    return y
+function position(y) {
+  if (y <= 0) {
+    return y + 50;
+  } else {
+    return y;
   }
 }
 
-
-var usedLetterconter=0;
+var usedLetterconter = 0;
 
 demuestra2(escena, añadeFondoBunimovich);
 
+////
 
+const svg4 = d3
+  .select("#contenedor-periodicidad-4")
+  .append("svg")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400);
 
+const stadiumBg4 = svg4.append("g");
 
+d3.select("#contenedor-periodicidad-4").style("position", "relative");
 
+const canvas4 = d3
+  .select("#contenedor-periodicidad-4")
+  .append("canvas")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400)
+  .style("opacity", 0.7)
+  .node();
 
+d3.select("#contenedor-periodicidad-4")
+  .append("div")
+  .style("position", "relative")
+  .style("height", "420px")
+  .style("width", "800px");
 
+const ctx4 = canvas4.getContext("2d");
 
+// Esto indica de donde nacen las bolas
+const svgScene4 = svg4.append("g").attr("transform", "translate(400, 200)");
 
+let bolas4 = [];
 
+function añadeBolas4(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
+  for (let i = 0; i < n; ++i) {
+    const rot = Transform.rotate(angleScale(i));
+    bolas4.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
+    });
+  }
+}
 
+const canvasBola4 = svgScene4.append("g");
 
+document.getElementById("reinicio-4").addEventListener("click", () => {
+  demuestraSensibilidad4(escena, añadeFondoBunimovich);
+  c = 0;
+});
 
+let iteracion4 = 0;
+function demuestraSensibilidad4(escena, backgroundFunction) {
+  ++iteracion4;
+  bolas4 = [];
+  ctx4.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
 
+  backgroundFunction(stadiumBg4);
 
-/// Periodicidad, segunda parte: Densidad 
+  añadeBolas4(
+    1,
+    new Vec2(100, 100 * Math.sqrt(2)),
+    new Vec2(180, 0),
+    0.0,
+    velocidad
+  );
+
+  const todasLasBolas = canvasBola4.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
+
+  const bolasVerdes = canvasBola4
+    .selectAll("*")
+    .data(bolas4)
+    .enter()
+    .append("circle")
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
+    })
+    .attr("cx", function (ball) {
+      return ball.current.origin.x;
+    })
+    .attr("cy", function (ball) {
+      return ball.current.origin.y;
+    })
+    .attr("r", 5)
+    .attr("fill", "green");
+  bolasVerdes.call(siguienteTransicion4(iteracion4, escena, false));
+}
+
+let c = 0;
+
+function siguienteTransicion4(nDeIteracion, escena, pintaBolaBlanca) {
+  return function (sel) {
+    sel
+      .transition()
+      .ease(d3.easeLinear)
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
+      })
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
+      })
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
+      })
+      .on("end", function (bola) {
+        try {
+          ctx4.beginPath();
+          ctx4.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx4.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          ctx4.lineWidth = 3;
+          ctx4.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx4.stroke();
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          if (c++ < 10 && nDeIteracion == iteracion4)
+            d3.select(this).call(
+              siguienteTransicion4(nDeIteracion, escena, pintaBolaBlanca)
+            );
+        } catch (e) {
+          console.error("");
+        }
+      });
+  };
+}
+
+demuestraSensibilidad4(escena, añadeFondoBunimovich);
+
+/////
+const svg5 = d3
+  .select("#contenedor-periodicidad-5")
+  .append("svg")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400);
+
+const stadiumBg5 = svg5.append("g");
+
+d3.select("#contenedor-periodicidad-5").style("position", "relative");
+
+const canvas5 = d3
+  .select("#contenedor-periodicidad-5")
+  .append("canvas")
+  .style("position", "absolute")
+  .attr("width", 800)
+  .attr("height", 400)
+  .style("opacity", 0.7)
+  .node();
+
+d3.select("#contenedor-periodicidad-5")
+  .append("div")
+  .style("position", "relative")
+  .style("height", "420px")
+  .style("width", "800px");
+
+const ctx5 = canvas5.getContext("2d");
+
+// Esto indica de donde nacen las bolas
+const svgScene5 = svg5.append("g").attr("transform", "translate(400, 200)");
+
+let bolas5 = [];
+
+function añadeBolas5(n, centro, direccion, diferencia, velocidad) {
+  const angleScale = d3
+    .scaleLinear()
+    .domain([0, n])
+    .range([-diferencia, diferencia]);
+  for (let i = 0; i < n; ++i) {
+    const rot = Transform.rotate(angleScale(i));
+    bolas5.push({
+      current: hazBola(centro, rot.apply(direccion).scale(velocidad)),
+    });
+  }
+}
+
+const canvasBola5 = svgScene5.append("g");
+
+document.getElementById("reinicio-5").addEventListener("click", () => {
+  demuestraSensibilidad5(escena, añadeFondoBunimovich);
+  c5 = 0;
+});
+
+let iteracion5 = 0;
+function demuestraSensibilidad5(escena, backgroundFunction) {
+  ++iteracion5;
+  bolas5 = [];
+  ctx5.clearRect(0, 0, 800, 400);
+  console.log(backgroundFunction);
+
+  backgroundFunction(stadiumBg5);
+
+  añadeBolas5(1, new Vec2(0, 0), new Vec2(-90, -90), 0.0, velocidad);
+
+  añadeBolas5(1, new Vec2(0, 0), new Vec2(90, 90), 0.0, velocidad);
+
+  const todasLasBolas = canvasBola5.selectAll("*");
+  todasLasBolas.transition();
+  todasLasBolas.remove();
+
+  const bolasVerdes = canvasBola5
+    .selectAll("*")
+    .data(bolas5)
+    .enter()
+    .append("circle")
+    .each((ball) => {
+      ball.next = decideSiguienteBote(ball.current, escena);
+    })
+    .attr("cx", function (ball) {
+      return ball.current.origin.x;
+    })
+    .attr("cy", function (ball) {
+      return ball.current.origin.y;
+    })
+    .attr("r", 5)
+    .attr("fill", "green");
+  bolasVerdes.call(siguienteTransicion5(iteracion5, escena, false));
+}
+
+let c5 = 0;
+
+function siguienteTransicion5(nDeIteracion, escena, pintaBolaBlanca) {
+  return function (sel) {
+    sel
+      .transition()
+      .ease(d3.easeLinear)
+      .duration((bola) => {
+        return (bola.next.originT - bola.current.originT) * 1000;
+      })
+      .attr("cx", (bola) => {
+        return bola.next.origin.x;
+      })
+      .attr("cy", (bola) => {
+        return bola.next.origin.y;
+      })
+      .on("end", function (bola) {
+        try {
+          ctx5.beginPath();
+          ctx5.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
+          ctx5.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
+          ctx5.lineWidth = 3;
+          ctx5.strokeStyle = pintaBolaBlanca ? "white" : "black";
+          ctx5.stroke();
+          bola.current = bola.next;
+          bola.next = decideSiguienteBote(bola.current, escena);
+          if (c5++ < 20 && nDeIteracion == iteracion5)
+            d3.select(this).call(
+              siguienteTransicion5(nDeIteracion, escena, pintaBolaBlanca)
+            );
+        } catch (e) {
+          console.error("");
+        }
+      });
+  };
+}
+
+demuestraSensibilidad5(escena, añadeFondoBunimovich);
+
+/// Periodicidad, segunda parte: Densidad
 const svg3 = d3
   .select("#contenedor-periodicidad-densidad")
   .append("svg")
@@ -742,8 +989,8 @@ function demuestra3(escena, backgroundFunction) {
     1,
     new Vec2(0, 0), // center
     new Vec2(0, 90), //direction
-    0.00001,
-    5
+    0.0001,
+    velocidad3
   );
 
   const todasLasBolas = canvasBola3.selectAll("*");
@@ -791,30 +1038,28 @@ function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
           ctx3.beginPath();
           ctx3.moveTo(bola.current.origin.x + 400, bola.current.origin.y + 200);
           ctx3.lineTo(bola.next.origin.x + 400, bola.next.origin.y + 200);
-          let x = bola.next.origin.x + 400
-          let y = position(bola.next.origin.y + 190);
+          const x = bola.next.origin.x + 400;
+          const y = position(bola.next.origin.y + 190);
 
           ctx3.lineWidth = 3;
           ctx3.strokeStyle = pintaBolaBlanca ? "white" : "black";
           ctx3.stroke();
 
-          ctx3.font = "40px Calibri"; // Use pixels instead of points
-          if (previousPointPosition != null && usedLetterconter3>=2){
-          
-            ctx3.fillStyle="#f0f";
-            ctx3.fillText(alphabet[usedLetterconter3-2], x,y);
+          if (previousPointPosition != null && usedLetterconter3 >= 2) {
+            ctx3.fillStyle = "#f0f";
+            ctx3.clearRect(0, 0, 5, 5);
+            ctx3.fillText(alphabet[usedLetterconter3 - 2], x, y);
             //console.log("entra aqui");
           }
-          
-          
-          ctx3.fillStyle="#000000";
+
+          ctx3.font = "40px Calibri"; // Use pixels instead of points
+          ctx3.fillStyle = "#000000";
           ctx3.fillText(abecedary(), x, y);
-          
-          updatepreviousPointPosition(x,y);
-          var li = document.createElement("li");
-          li.appendChild(document.createTextNode(x,y));
+
+          updatepreviousPointPosition(x, y);
+          const li = document.createElement("li");
+          li.appendChild(document.createTextNode(x, y));
           document.getElementById("puntos-colision").appendChild(li);
-  
 
           bola.current = bola.next;
           bola.next = decideSiguienteBote(bola.current, escena);
@@ -823,33 +1068,32 @@ function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
               siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca)
             );
         } catch (e) {
-          console.error("2");
+          console.error("3");
         }
       });
   };
 }
 
-function updatepreviousPointPosition(x,y){
-  previousPointPosition=[];
+function updatepreviousPointPosition(x, y) {
+  previousPointPosition = [];
   previousPointPosition.push(x);
   previousPointPosition.push(y);
-  
 }
 
-const alphabet = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
-var usedLetterconter3=0;
-var alphabetLetter="A";
-var previousPointPosition=null;
+const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
+var usedLetterconter3 = 0;
+var alphabetLetter = "A";
+var previousPointPosition = null;
 
-function abecedary(){
+function abecedary() {
   //console.log(alphabet.length);
   alphabetLetter = alphabet[usedLetterconter3];
-  if (usedLetterconter3 < alphabet.length-1){
+  if (usedLetterconter3 < alphabet.length - 1) {
     usedLetterconter3++;
-  }else{
-    usedLetterconter3=0;
+  } else {
+    usedLetterconter3 = 0;
   }
-  
+
   return alphabetLetter;
 }
 
