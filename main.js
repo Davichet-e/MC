@@ -362,6 +362,9 @@ function decideSiguienteBote(ball, escena) {
   return botes[0];
 }
 
+
+var firstTime=true;
+
 const svg = d3
   .select("#contenedor-sensibilidad")
   .append("svg")
@@ -429,12 +432,15 @@ function añadeBolas(n, centro, direccion, diferencia, velocidad) {
 const canvasBola = svgScene.append("g");
 
 document.getElementById("reinicio").addEventListener("click", () => {
-  demuestraSensibilidad(escena, añadeFondoBunimovich);
+  demuestraSensibilidad(escena, añadeFondoBunimovich, false);
+});
+document.getElementById("reinicio-azar").addEventListener("click", () => {
+  demuestraSensibilidad(escena, añadeFondoBunimovich,true);
 });
 
 let iteracion = 0;
 const velocidad = 5;
-function demuestraSensibilidad(escena, backgroundFunction) {
+function demuestraSensibilidad(escena, backgroundFunction, azar) {
   ++iteracion;
   bolas = [];
   ctx.clearRect(0, 0, 800, 400);
@@ -442,13 +448,39 @@ function demuestraSensibilidad(escena, backgroundFunction) {
 
   backgroundFunction(stadiumBg);
 
-  añadeBolas(
-    300,
-    new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
-    new Vec2(80, 80),
-    0.00001,
-    velocidad
-  );
+  if(firstTime){
+    document.querySelector("#input1").value = (Math.random() * 100 - 50) + 400;
+    document.querySelector("#input2").value = Math.random() * 100 - 50 + 200;
+    document.querySelector("#input3").value = '480';
+    document.querySelector("#input4").value = '280';
+    firstTime=false;
+  }
+  
+  if (azar){
+    añadeBolas(
+      2,
+      new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
+      new Vec2(80,80),
+      0.00001,
+      velocidad
+    );
+    
+  }else{
+    const e1= document.querySelector("#input1");
+    const e2= document.querySelector("#input2");
+    const e3= document.querySelector("#input3");
+    const e4= document.querySelector("#input4");
+    const e5= document.querySelector("#input5");
+    añadeBolas(
+      e5.value,
+      new Vec2((parseFloat(e1.value))-400, parseFloat(e2.value)-200),
+      new Vec2((parseFloat(e3.value))-400, parseFloat(e4.value)-200),
+      0.00001,
+      velocidad
+    );
+  }
+
+  
 
   const todasLasBolas = canvasBola.selectAll("*");
   todasLasBolas.transition();
@@ -511,7 +543,7 @@ function siguienteTransicion(nDeIteracion, escena, pintaBolaBlanca) {
   };
 }
 
-demuestraSensibilidad(escena, añadeFondoBunimovich);
+demuestraSensibilidad(escena, añadeFondoBunimovich, true);
 
 ///
 const svg2 = d3
@@ -576,7 +608,7 @@ function demuestra2(escena, backgroundFunction) {
     1,
     new Vec2(0, 0), // center
     new Vec2(0, -90), //direction
-    0.00001,
+    0.0000,
     velocidad2
   );
 
@@ -636,6 +668,10 @@ function siguienteTransicion2(nDeIteracion, escena, pintaBolaBlanca) {
           ctx2.fillStyle = "#000000";
 
           ctx2.fillText(usedLetterconter % 2 == 0 ? "A" : "B", x, y);
+          const li = document.createElement("li");
+          l = usedLetterconter % 2 == 0 ? "A" : "B";
+          li.appendChild(document.createTextNode(l +": "+x+",  "+y));
+          document.getElementById("puntos-colision-periodicidad").appendChild(li);
           usedLetterconter++;
 
           bola.current = bola.next;
@@ -1058,7 +1094,7 @@ function siguienteTransicion3(nDeIteracion, escena, pintaBolaBlanca) {
 
           updatepreviousPointPosition(x, y);
           const li = document.createElement("li");
-          li.appendChild(document.createTextNode(x, y));
+          li.appendChild(document.createTextNode(alphabet[usedLetterconter3 - 1]+":  "+ x+",  "+y));
           document.getElementById("puntos-colision").appendChild(li);
 
           bola.current = bola.next;
@@ -1392,3 +1428,10 @@ document
 setTimeout(() => {
   demuestra6(escena, añadeFondoBunimovich);
 }, 4000);
+
+
+document.getElementById("probar").addEventListener("click", () => {
+  var anchor = document.querySelector('#contenedor-sensibilidad');
+  anchor.scrollIntoView();
+  document.querySelector("#input5").value = 300;
+});

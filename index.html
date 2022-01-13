@@ -83,7 +83,22 @@
 
       <div id="contenedor-sensibilidad"></div>
 
+    X=
+    <input id="input1" />
+
+    Y=
+    <input id="input2" />
+
+    Dirección=
+    <input id="input3" />
+    <input id="input4" />
+
+    Número de bolas=
+    <input id="input5" type="number" value="2"/>
+
       <button id="reinicio">Reinicia Experimento</button>
+      <button id="reinicio-azar">Reinicia Experimento al azar</button>
+
 
     </section>
     <section>
@@ -97,7 +112,11 @@
         visualizar algunas de ellas. </p>
       <p> Puntos periódicos de orden 2</p>
 
-      <div id="contenedor-periodicidad">
+      <div id="contenedor-periodicidad" style="margin-bottom: 10px;">
+      </div>
+      <div id="ptc">
+        <h5>Puntos de colisión AB (x,y)</h5>
+        <ol id="puntos-colision-periodicidad"></ol>
       </div>
 
       <p>También encontramos períodos de orden 4</p>
@@ -121,16 +140,17 @@
         ⊂ D siempre existe un punto periódico en U.</p>
       <p>Para que el estadio de Bunimovich sea un sistema sea caótico, se debe verificar que los puntos periódicos del
         sistema f son densos en el dominio D.</p>
+        <p>Se ha añadido una pequeña desviación al inciio de la bola, a diferencia de la primera animación de periodicidad.</p>
       <p>En el contexto del billar, esto se traduce como: el conjunto de puntos periódicos debe ser denso en el espacio
         de colisión (Puntos en la pared del billar donde la bola golpea). Esto se puede interpretar como: para cualquier
         par posición-dirección p en el espacio de collisión, p es un punto
         en una órbita periódica o hay un punto periódico cercano a p.</p>
 
-      <p>Aquí podemos ver que los puntos de la órbita estan a una distancia &epsilon;>0 de ser periódicos. </p>
+      <p>Aquí podemos ver que los puntos de la órbita estan a una distancia &epsilon;>0 de ser periódicos. Hay puntos periodicos en todos estos puntos del intervalo. Se conseguiría un punto periodico en todos estos puntos. </p>
 
       <div id="contenedor-periodicidad-densidad"></div>
       <div>
-        <h5>Puntos de colisión AB</h5>
+        <h5>Puntos de colisión AB (x,y)</h5>
         <ol id="puntos-colision"></ol>
       </div>
 
@@ -139,6 +159,10 @@
         periódico q&epsilon; donde la distancia entre py q&epsilon; es menor que &epsilon;. </p>
 
     </section>
+
+ 
+
+  
 
     <section>
       <h3 style="margin-top: 100px;">Transitividad</h3>
@@ -153,8 +177,17 @@
         puntos, siendo ACDE.</p>
       <div id="contenedor-transitividad"></div>
       <button id="reinicio-transitividad">Reinicia Experimento</button>
-
     </section>
+      <section>
+        
+        <h3>Demostración de transitividad del sistema</h3>
+        <p>Las trayectorias en el estadio Bunimovich exhiben (eventualmente) divergencia exponencial a lo largo del tiempo. </p>
+        <p>Además, casi cualquier trayectoria en un estadio Bunimovich eventualmente tocará cubrir cualquier punto del estadio.</p>
+        <p>Esto se puede probar al colocar un número alto de bolas en la primera animación, por ejemplo: 300 bolas.</p> 
+        <button id="probar" style="margin-bottom: 200px;">Probar</button>
+        
+      </section>
+
   </main>
 </body>
 
