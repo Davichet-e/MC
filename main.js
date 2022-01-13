@@ -448,18 +448,12 @@ const e4= document.querySelector("#input4")
 
   añadeBolas(
     1,
-    new Vec2(e1.value, e2.value),
-    new Vec2(e3.value, e4.value),
+    new Vec2(parseFloat(e1.value), parseFloat(e2.value)),
+    new Vec2(parseFloat(e3.value), parseFloat(e4.value)),
     0.00001,
     velocidad
   );
-añadeBolas(
-    1,
-    new Vec2(e1.value, e2.value),
-    new Vec2(e3.value, e4.value),
-    0.00001,
-    velocidad
-  );
+
 
 
   const todasLasBolas = canvasBola.selectAll("*");
