@@ -443,7 +443,7 @@ function demuestraSensibilidad(escena, backgroundFunction) {
   backgroundFunction(stadiumBg);
 
   añadeBolas(
-    2,
+    300,
     new Vec2(Math.random() * 100 - 50, Math.random() * 100 - 50),
     new Vec2(80, 80),
     0.00001,
